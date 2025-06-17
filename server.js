@@ -22,7 +22,6 @@ const readJSON = async path => {
 const writeJSON = (path, data) =>
   fs.writeFile(path, JSON.stringify(data, null, 2));
 
-
 app.use(express.json());
 
 app.get("/api/products", async (req, res) => {
