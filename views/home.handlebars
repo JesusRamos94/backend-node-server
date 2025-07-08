@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos</title>
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <h1>Productos</h1>
+
+  <div class="grid">
+    {{#each products}}
+      <div class="card">
+        <h2>{{this.producto}}</h2>
+        <p><strong>Precio:</strong> {{this.price}} CLP</p>
+        <p><strong>Marca:</strong> {{this.description}}</p>
+        <p><strong>Color:</strong> {{this.color}}</p>
+        <p><strong>Código:</strong> {{this.code}}</p>
+        <p><strong>Stock:</strong> {{this.stock}}</p>
+      </div>
+    {{/each}}
+  </div>
+
+  <div class="actions">
+    <a href="/realtimeproducts" class="primary">Ver en Tiempo Real</a>
+  </div>
+</body>
+</html>

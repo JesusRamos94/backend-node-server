@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos en Tiempo Real</title>
+  <link rel="stylesheet" href="/css/realTimeProducts.css">
+</head>
+<body>
+  <a href="/home" class="home-link">← Inicio</a>
+  <h1>Productos (Tiempo Real)</h1>
+
+  <div id="prodGrid" class="grid"></div>
+
+  <div class="form-container">
+    <form id="addForm">
+      <input name="producto" placeholder="Producto" required>
+      <input name="color"     placeholder="Color"    required>
+      <input name="marca"     placeholder="Marca"    required>
+      <input name="codigo"    placeholder="Código"   required>
+      <input name="precio"    type="number" step="0.01" placeholder="Precio" required>
+      <input name="stock"     type="number" placeholder="Stock"  required>
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/realTimeProducts.js"></script>
+</body>
+</html>
