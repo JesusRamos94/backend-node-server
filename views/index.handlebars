@@ -1,0 +1,29 @@
+<div class="actions">
+  <a href="/carts/{{cartId}}" class="primary">Ver mi carrito</a>
+</div>
+<div class="grid">
+  {{#each products}}
+    <div class="card">
+      <span class="category">{{this.category}}</span>
+      <h2>{{this.title}}</h2>
+      <p class="price">${{this.price}}</p>
+      <p class="desc">{{this.description}}</p>
+      <div class="card-actions">
+        <a href="/products/{{this._id}}" class="primary small-btn">Ver detalle</a>
+        <form action="/carts/{{../cartId}}/add/{{this._id}}" method="post" class="add-form" style="display:inline;">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="add-cart-btn small-btn">Agregar al carrito</button>
+        </form>
+      </div>
+    </div>
+  {{/each}}
+</div>
+<div class="actions pagination">
+  {{#if hasPrevPage}}
+    <a href="{{prevLink}}" class="primary secondary"> hola Anterior</a>
+  {{/if}}
+  <span>Pagina {{page}} de {{totalPages}}</span>
+  {{#if hasNextPage}}
+    <a href="{{nextLink}}" class="primary secondary">Siguiente </a>
+  {{/if}}
+</div>

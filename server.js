@@ -1,42 +1,61 @@
+import dotenv from 'dotenv';
 import express from 'express';
-import { createServer } from 'http';
-import { Server as IOServer } from 'socket.io';
-import { engine } from 'express-handlebars';
+import mongoose from 'mongoose';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser'
+import hbs from 'express-handlebars';
 
-import productsRouter from './routes/api/products.router.js';
-import cartsRouter    from './routes/api/carts.router.js';
-import viewsRouter    from './routes/views.router.js';
+import productRouter from './routes/api/products.router.js';
+import cartRouter    from './routes/api/carts.router.js';
+import viewsRouter   from './routes/views.router.js';
 
-import { ProductManager } from './managers/productsManager.js';
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
 
 const app = express();
-const server = createServer(app);
-const io = new IOServer(server);
-const pm = new ProductManager('./data/products.json');
 
-app.engine('handlebars', engine({ layoutsDir: 'views/layouts', defaultLayout: 'main' }));
-app.set('view engine', 'handlebars');
-app.set('views', 'views');
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('🚀 Conectado a MongoDB'))
+.catch(err => console.error('❌ Error al conectar a MongoDB:', err));
+
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// Montar rutas
-app.use('/', viewsRouter);
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
-
-// Socket.io
-io.on('connection', async socket => {
-  socket.emit('updateProducts', await pm.getProducts());
-  socket.on('addProduct', async data => {
-    await pm.addProduct(data);
-    io.emit('updateProducts', await pm.getProducts());
-  });
-  socket.on('deleteProduct', async id => {
-    await pm.deleteProduct(id);
-    io.emit('updateProducts', await pm.getProducts());
-  });
+app.use((req, res, next) => {
+  const fixedCartId = '688591b5bd6655638ca6a381';
+  res.cookie('cartId', fixedCartId, { httpOnly: true });
+  req.cartId = fixedCartId;
+  next();
 });
 
-server.listen(8080, () => console.log('Escuchando puerto 8080'));
+import { engine } from 'express-handlebars';
+app.engine('handlebars', engine());
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'handlebars');
+
+app.use('/api/products', productRouter);
+app.use('/api/carts',    cartRouter);
+app.use('/', viewsRouter);
+app.use('/carts', viewsRouter);
+
+
+app.engine('handlebars', engine({
+  helpers: {
+    multiply: (a, b) => a * b
+  }
+}));
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en puerto ${PORT}`);
+});

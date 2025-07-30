@@ -1,0 +1,37 @@
+<div class="cart-view">
+  <div class="actions">
+    <a href="/products" class="primary secondary cart-back-btn">← Volver a productos</a>
+  </div>
+  <h1 class="cart-title">Mi Carrito</h1>
+  {{#if products.length}}
+    <div class="cart-items">
+      {{#each products}}
+        <div class="card cart-item-card">
+          <div class="cart-item-top">
+            <div>
+              <span class="category">{{this.product.category}}</span>
+              <h2>{{this.product.title}}</h2>
+              <p class="desc">{{this.product.description}}</p>
+            </div>
+          </div>
+          <div class="cart-item-details">
+            <p class="price">Precio: ${{this.product.price}}</p>
+            <p class="stock"><strong>Stock:</strong> {{this.product.stock}}</p>
+          </div>
+          <div class="cart-actions">
+            <form action="/carts/{{../cart._id}}/update/{{this.product._id}}" method="post" class="add-form">
+              <input type="number" name="quantity" value="{{this.quantity}}" min="1" max="{{this.product.stock}}" class="quantity-input">
+              <button type="submit" class="primary small-btn">Actualizar</button>
+            </form>
+            <form action="/carts/{{../cart._id}}/remove/{{this.product._id}}" method="post">
+              <button type="submit" class="primary secondary small-btn">Eliminar</button>
+            </form>
+          </div>
+          <p class="cart-total">Subtotal: ${{multiply this.product.price this.quantity}}</p>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <p class="cart-empty-msg">El carrito está vacío.</p>
+  {{/if}}
+</div>

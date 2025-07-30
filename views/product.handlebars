@@ -1,0 +1,29 @@
+<div class="actions">
+  <button onclick="window.history.back()" class="primary">Volver</button>
+  <a href="/carts/{{cartId}}" class="primary">Ver mi carrito</a>
+</div>
+<div class="grid">
+  <div class="card">
+    <span class="category">{{product.category}}</span>
+    <h2>{{product.title}}</h2>
+    <p class="price">${{product.price}}</p>
+    <p class="desc">{{product.description}}</p>
+    <p class="stock {{#unless product.status}}no{{/unless}}">
+      <strong>Disponible:</strong> {{#if product.status}}Sí{{else}}No{{/if}}
+    </p>
+    <p class="stock">
+      <strong>Stock:</strong> {{product.stock}}
+    </p>
+    <form action="/carts/{{cartId}}/add/{{product._id}}" method="post" class="add-form">
+      <label>
+        Cantidad:
+        <input type="number" name="quantity" value="1" min="1" max="{{product.stock}}" class="quantity-input">
+        </label>
+        <button type="submit" class="add-cart-btn" {{#unless product.status}}disabled style="opacity:0.6;cursor:not-allowed;"{{/unless}}>
+          Agregar al carrito
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
